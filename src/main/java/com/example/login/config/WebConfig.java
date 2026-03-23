@@ -10,8 +10,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://loginsingenio.netlify.app", "http://localhost:4200") // Aquí pones tu URL de Netlify
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedOrigins("https://loginsingenio.netlify.app")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // <-- ESTE ES CLAVE
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }

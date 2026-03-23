@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*") // Para que Angular pueda conectarse sin líos de CORS
+@CrossOrigin(origins = "https://loginsingenio.netlify.app", allowedHeaders = "*", methods = {RequestMethod.POST, RequestMethod.OPTIONS})
 public class AuthController {
 
     @Autowired
