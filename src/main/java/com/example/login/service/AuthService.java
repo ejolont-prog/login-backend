@@ -1,7 +1,7 @@
 package com.example.login.service;
 
-import com.example.login.dto.LoginRequest;
 import com.example.login.model.Usuario;
+import com.example.login.dto.LoginRequest;
 import com.example.login.repository.UsuarioRepository;
 import com.example.login.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ public class AuthService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    /*
     public String authenticate(LoginRequest loginRequest) {
         System.out.println("DEBUG BACKEND: Recibiendo login para: " + loginRequest.getUsername());
         System.out.println("DEBUG BACKEND: Rol/Esquema recibido: " + loginRequest.getRol());
@@ -57,4 +58,27 @@ public class AuthService {
 
         return null; // Si llega aquí, es "Credenciales incorrectas"
     }
+     */
+
+    public AuthResponse authenticate(LoginRequest loginRequest) {
+        String schema = loginRequest.getRol().toLowerCase().trim();
+        try {
+            jdbcTemplate.execute("SET search_path TO " + schema);
+            Optional<Usuario> userOpt = usuarioRepository.findByUsername(loginRequest.getUsername());
+
+            if (userOpt.isPresent() && userOpt.get().getPassword().equals(loginRequest.getPassword())) {
+                // Generamos el token
+                String token = jwtUtil.generateToken(userOpt.get().getUsername(), loginRequest.getRol());
+                // DEVOLVEMOS AMBOS: Token para entrar y Rol para saber a qué web ir
+                return new AuthResponse(token, loginRequest.getRol());
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        } finally {
+            jdbcTemplate.execute("SET search_path TO public");
+        }
+        return null;
+    }
+
+
 }
