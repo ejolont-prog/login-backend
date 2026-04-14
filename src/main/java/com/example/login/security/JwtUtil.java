@@ -9,16 +9,23 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
 
 @Component
 public class JwtUtil {
-    // ESTA CLAVE DEBE SER SECRETA. En producción usa una variable de entorno.
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private final long expirationTime = 3600000 * 8; // 8 horas
+
+    // 1. Leemos la clave del properties
+    @Value("${jwt.secret}")
+    private String secretKey;
+
+    private final long expirationTime = 60000 * 10;
 
     public String generateToken(String username, String role) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", role); // AQUÍ metemos si es AGRICULTOR o INGENIO
+        claims.put("role", role);
+
+        // 2. Convertimos el String en la Key oficial
+        Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
 
         return Jwts.builder()
                 .setClaims(claims)
