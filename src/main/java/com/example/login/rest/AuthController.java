@@ -12,7 +12,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "https://loginsingenio.netlify.app", allowedHeaders = "*", methods = {RequestMethod.POST, RequestMethod.OPTIONS})
+@CrossOrigin(
+        origins = {
+                "https://loginsingenio.netlify.app", // Producción
+                "http://localhost:4200"              // Local
+        },
+        allowedHeaders = "*",
+        methods = {RequestMethod.POST, RequestMethod.OPTIONS}
+)
 public class AuthController {
 
     @Autowired
