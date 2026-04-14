@@ -15,7 +15,8 @@ import java.util.Map;
 @CrossOrigin(
         origins = {
                 "https://loginsingenio.netlify.app", // Producción
-                "http://localhost:4200"              // Local
+                "http://localhost:4200",
+                "http://localhost:4300"// Local
         },
         allowedHeaders = "*",
         methods = {RequestMethod.POST, RequestMethod.OPTIONS}
