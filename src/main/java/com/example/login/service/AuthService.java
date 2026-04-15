@@ -29,9 +29,21 @@ public class AuthService {
             Optional<Usuario> userOpt = usuarioRepository.findByUsername(loginRequest.getUsername());
 
             if (userOpt.isPresent() && userOpt.get().getPassword().equals(loginRequest.getPassword())) {
-                // Generamos el token
-                String token = jwtUtil.generateToken(userOpt.get().getUsername(), loginRequest.getRol());
-                // DEVOLVEMOS AMBOS: Token para entrar y Rol para saber a qué web ir
+                // 1. Extraemos el ID (que en tu clase Java se llama 'id')
+                Long idParaElToken = userOpt.get().getId();
+
+// --- IMPRESIÓN EN CONSOLA PARA DEBUG ---
+                System.out.println("\n--- LOGIN DETECTADO ---");
+                System.out.println("ID Usuario: " + idParaElToken);
+                System.out.println("Username: " + userOpt.get().getUsername());
+                System.out.println("Rol/Esquema: " + schema);
+                System.out.println("------------------------\n");
+                // ---------------------------------------
+
+                // 2. Se lo enviamos al generador (ID, Username, Rol)
+                String token = jwtUtil.generateToken(idParaElToken, userOpt.get().getUsername(), loginRequest.getRol());
+
+                // 3. Devolvemos la respuesta al frontend
                 return new AuthResponse(token, loginRequest.getRol());
             }
         } catch (Exception e) {
